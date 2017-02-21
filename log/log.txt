@@ -1,0 +1,9 @@
+[2017-01-18 08:35:59.184] [file_logger] [info] server starting...
+[2017-01-18 08:35:59.184] [file_logger] [info] SSL initailize starting...
+[2017-01-18 08:35:59.185] [file_logger] [info] Using OpenSSL version "OpenSSL 1.0.2g  1 Mar 2016"
+and libevent version "2.1.7-beta"
+[2017-01-18 08:35:59.186] [file_logger] [info] SSL initailize  successful
+[2017-01-18 08:35:59.186] [file_logger] [info] server is ready
+[2017-01-18 08:36:04.423] [file_logger] [info] 127.0.0.1 Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0 GET /demo 200
+[2017-01-18 08:36:16.306] [file_logger] [info] server will close
+[2017-01-18 08:36:16.306] [file_logger] [info] server closed

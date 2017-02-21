@@ -1,0 +1,15 @@
+[Unit]
+Description=httpevent server
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/httpevent --config=/etc/httpevent/httpevent.properties --pidfile=/var/run/httpevent.pid --daemon
+PIDFile=/var/run/httpevent.pid
+SuccessExitStatus=1 2 8 SIGKILL
+Restart=on-failure
+RestartSec=10s
+
+
+
+[Install]
+WantedBy=multi-user.target
