@@ -19,13 +19,16 @@ namespace httpevent {
 
         void add_lua_method() {
             kaguya::State &state = *(this->lua_state);
-            state["LUA_TEST"].setClass(kaguya::UserdataMetatable<httpevent::lua>()
-                    .setConstructors < httpevent::lua()>()
-                    .addFunction("add", &httpevent::lua::add)
-                    .addFunction("strstr", &httpevent::lua::strstr)
-                    .addFunction("loop", &httpevent::lua::loop)
-                    );
+            if (!state["LUA_TEST"]) {
+                state["LUA_TEST"].setClass(kaguya::UserdataMetatable<httpevent::lua>()
+                        .setConstructors < httpevent::lua()>()
+                        .addFunction("add", &httpevent::lua::add)
+                        .addFunction("strstr", &httpevent::lua::strstr)
+                        .addFunction("loop", &httpevent::lua::loop)
+                        );
+            }
             state["httpevent"]["lua_test"] = this;
+
         }
 
         void handler(const request& req, response& res) {

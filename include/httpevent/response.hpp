@@ -90,12 +90,11 @@ namespace httpevent {
             if (!sent) {
                 std::size_t buf_size = evbuffer_get_length(res);
                 if (buf_size) {
-                    char *buf_data = new char[buf_size + 1];
+                    char buf_data[buf_size + 1];
                     ev_ssize_t n = evbuffer_copyout(res, buf_data, buf_size + 1);
                     if (n >= 0) {
                         result.assign(buf_data, n);
                     }
-                    delete[] buf_data;
                 }
             }
             return result;

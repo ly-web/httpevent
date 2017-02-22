@@ -62,7 +62,7 @@ static std::string get_mime_type(const std::string& file) {
 }
 
 static void init_callback_config(Poco::Util::LayeredConfiguration* config) {
-    SERVER_TYPE = config->getInt("http.serverType", 1);
+    SERVER_TYPE = config->getInt("http.serverType", 3);
     MIME_SRC_FILE = config->getString("http.mime", "/etc/httpevent/mime.conf");
     ENABLE_SSL = config->getBool("http.enableSSL", true);
     HOST = config->getString("http.ip", "127.0.0.1");
