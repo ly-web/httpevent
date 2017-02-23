@@ -39,15 +39,15 @@ namespace httpevent {
             }
 
             std::string get_cookie(const std::string& k) {
-                return this->cookie_data->at(k);
+                return (*this->cookie_data)[k];
             }
 
             void set_session(const std::string& k, const std::string& v) {
-                this->session_data->at(k) = v;
+                (*this->session_data)[k] = v;
             }
 
             std::string get_session(const std::string& k) {
-                return this->session_data->at(k).toString();
+                return (*this->session_data)[k].toString();
             }
 
             void redirect(const std::string& uri, int code) {
