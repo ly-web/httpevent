@@ -25,7 +25,7 @@ static void init_lua_state() {
 static void config_lua_state(httpevent::request* req, httpevent::response* res, std::vector<std::string>& route_data) {
     LUA_STATE["httpevent"]["response"] = res;
     LUA_STATE["httpevent"]["request"] = req;
-    LUA_STATE["httpevent"]["route_data"] = route_data;
+    LUA_STATE["httpevent"]["ROUTE"] = route_data;
 }
 
 static void init_mime_type(const std::string& path) {

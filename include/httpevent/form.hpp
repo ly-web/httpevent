@@ -77,16 +77,17 @@ namespace httpevent {
             if (this->head_data.find("Content-Type") != this->head_data.end()) {
                 poco_req.setContentType(this->head_data.at("Content-Type").convert<std::string>());
             }
-            const std::string& BODY = this->body_data.get();
-            Poco::SharedPtr<Poco::Net::HTMLForm> poco_form;
+
+            Poco::Net::HTMLForm* poco_form = 0;
             if (method == "GET") {
-                poco_form.assign(new Poco::Net::HTMLForm(poco_req));
-            } else if (method == "POST" && !BODY.empty()) {
+                poco_form = new Poco::Net::HTMLForm(poco_req);
+            } else if (method == "POST") {
+                const std::string& BODY = this->body_data.get();
                 std::istringstream IS(BODY);
                 if (BODY.find("filename") == std::string::npos) {
-                    poco_form.assign(new Poco::Net::HTMLForm(poco_req, IS));
+                    poco_form = new Poco::Net::HTMLForm(poco_req, IS);
                 } else if (handler) {
-                    poco_form.assign(new Poco::Net::HTMLForm(poco_req, IS, *handler));
+                    poco_form = new Poco::Net::HTMLForm(poco_req, IS, *handler);
                     auto result = handler->get_data();
                     for (auto & item : result) {
                         if (item.ok) {
@@ -95,10 +96,11 @@ namespace httpevent {
                     }
                 }
             }
-            if (!poco_form.isNull()) {
+            if (poco_form) {
                 for (auto & item : *poco_form) {
                     kvmap::operator[](item.first) = item.second;
                 }
+                delete poco_form;
             }
         }
     private:

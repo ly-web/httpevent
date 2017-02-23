@@ -14,6 +14,7 @@
 #include "httpevent/mustache.hpp"
 #include "httpevent/upload_handler.hpp"
 #include "httpevent/view.hpp"
+#include "httpevent/lua.hpp"
 
 
 #endif /* HTTPEVENT_HPP */

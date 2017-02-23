@@ -43,11 +43,6 @@ namespace httpevent {
 
         virtual ~response() = default;
 
-        /*response& send_head(const std::string& field, const Poco::DynamicAny& value) {
-            evhttp_add_header(this->headers, field.c_str(), value.convert<std::string>().c_str());
-            return *this;
-        }*/
-
         response& send_head(const std::string& field, const std::string& value) {
             evhttp_add_header(this->headers, field.c_str(), value.c_str());
             return *this;
@@ -77,7 +72,6 @@ namespace httpevent {
         }
 
         void redirect(const std::string& uri, int code = 301) {
-
             if (!this->sent) {
                 this->send_head("Location", uri);
                 evhttp_send_reply(this->req, code, code == 301 ? "Moved Permanently" : "Found", this->res);
@@ -90,11 +84,12 @@ namespace httpevent {
             if (!sent) {
                 std::size_t buf_size = evbuffer_get_length(res);
                 if (buf_size) {
-                    char buf_data[buf_size + 1];
+                    char *buf_data = new char[buf_size + 1];
                     ev_ssize_t n = evbuffer_copyout(res, buf_data, buf_size + 1);
                     if (n >= 0) {
                         result.assign(buf_data, n);
                     }
+                    delete[] buf_data;
                 }
             }
             return result;

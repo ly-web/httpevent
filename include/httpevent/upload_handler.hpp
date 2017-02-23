@@ -20,9 +20,9 @@ namespace httpevent {
 
         upload_handler(
                 const std::string& allowName
-                , const std::string& allowType = "image/png|image/jpeg|image/gif|image/webp|application/zip"
-                , const std::string& uploadDirectory = "/var/httpevent/www/upload"
-                , double allowMaxSize = 1048576)
+                , const std::string& allowType = Poco::Util::Application::instance().config().getString("http.uploadAllowType", "image/png|image/jpeg|image/gif|image/webp|application/zip")
+                , const std::string& uploadDirectory = Poco::Util::Application::instance().config().getString("http.uploadDirectory", "/var/httpevent/www/upload")
+                , double allowMaxSize = Poco::Util::Application::instance().config().getDouble("http.uploadMaxSize", 1048576))
         : data()
         , allowName(allowName)
         , allowType(allowType)
@@ -72,7 +72,7 @@ namespace httpevent {
                 md5.update(Poco::DateTimeFormatter::format(now, Poco::DateTimeFormat::HTTP_FORMAT) + fileinfo.filename);
                 fileinfo.savepath += Poco::format("/%[0]s.%[1]s", Poco::MD5Engine::digestToHex(md5.digest()), path.getExtension());
 
-                //			Poco::TemporaryFile tempFile;
+
                 Poco::FileOutputStream fileoutstream(fileinfo.savepath);
 
 
