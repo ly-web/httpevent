@@ -3,6 +3,7 @@
 
 #include "view.hpp"
 #include "upload_handler.hpp"
+#include "form.hpp"
 
 namespace httpevent {
 
@@ -10,22 +11,20 @@ namespace httpevent {
     public:
 
         lua()
-        : httpevent::view(), lua_directory(Poco::Util::Application::instance().config().getString("http.luaDirectory", "/var/httpevent/lua")) {
+        : httpevent::view()
+        , lua_directory(Poco::Util::Application::instance().config().getString("http.luaDirectory", "/var/httpevent/lua")) {
 
         }
 
         virtual~lua() = default;
     private:
 
-        class lua_tool {
+        class cookie_tool {
         public:
 
-            lua_tool(httpevent::response* res
-                    , httpevent::cookies* cookie_data
-                    , std::map<std::string, Poco::DynamicAny>* session_data)
+            cookie_tool(httpevent::response* res, httpevent::cookies* cookie_data)
             : res(res)
-            , cookie_data(cookie_data)
-            , session_data(session_data) {
+            , cookie_data(cookie_data) {
             }
 
             void set_cookie(const std::string& k, const std::string& v, const std::string& path, int expires, bool secure) {
@@ -35,11 +34,46 @@ namespace httpevent {
                 cookie.setPath(path);
                 cookie.setMaxAge(expires);
                 cookie.setSecure(secure);
+                cookie.setHttpOnly(true);
                 this->res->send_cookie(cookie);
             }
 
             std::string get_cookie(const std::string& k) {
-                return (*this->cookie_data)[k];
+                return this->cookie_data->at(k);
+            }
+
+            bool has_cookie(const std::string& k) {
+                return this->cookie_data->find(k) != this->cookie_data->end();
+            }
+        private:
+            httpevent::response * res;
+            httpevent::cookies* cookie_data;
+        };
+
+        class form_tool {
+        public:
+
+            form_tool(httpevent::form* form_data) : form_data(form_data) {
+            }
+
+            std::string get_form(const std::string& k) {
+                return this->form_data->at(k);
+            }
+
+            bool has_form(const std::string& k) {
+                return this->form_data->find(k) != this->form_data->end();
+            }
+
+        private:
+            httpevent::form* form_data;
+        };
+
+        class session_tool {
+        public:
+
+            session_tool(std::map<std::string, std::string>* session_data)
+            : session_data(session_data) {
+
             }
 
             void set_session(const std::string& k, const std::string& v) {
@@ -47,7 +81,22 @@ namespace httpevent {
             }
 
             std::string get_session(const std::string& k) {
-                return (*this->session_data)[k].toString();
+                return this->session_data->at(k);
+            }
+
+            bool has_session(const std::string& k) {
+                return this->session_data->find(k) != this->session_data->end();
+            }
+
+        private:
+            std::map<std::string, std::string>* session_data;
+        };
+
+        class util_tool {
+        public:
+
+            util_tool(httpevent::response* res)
+            : res(res) {
             }
 
             void redirect(const std::string& uri, int code) {
@@ -61,60 +110,92 @@ namespace httpevent {
 
         private:
             httpevent::response* res;
-            httpevent::cookies* cookie_data;
-            std::map<std::string, Poco::DynamicAny>* session_data;
         };
 
-        void register_custom_class(kaguya::State& state) {
-            if (!state["LUA_TOOL"]) {
-                state["LUA_TOOL"].setClass(kaguya::UserdataMetatable<httpevent::lua::lua_tool>()
-                        .setConstructors < httpevent::lua(httpevent::response*
-                        , httpevent::cookies*
-                        , std::map<std::string, Poco::DynamicAny>*)>()
-                        .addFunction("set_cookie", &httpevent::lua::lua_tool::set_cookie)
-                        .addFunction("get_cookie", &httpevent::lua::lua_tool::get_cookie)
-                        .addFunction("set_session", &httpevent::lua::lua_tool::set_session)
-                        .addFunction("get_session", &httpevent::lua::lua_tool::get_session)
-                        .addFunction("redirect", &httpevent::lua::lua_tool::redirect)
-                        .addFunction("error", &httpevent::lua::lua_tool::error)
+        void register_form_tool_class(kaguya::State& state) {
+            if (!state["_FORM_TOOL_"]) {
+                state["_FORM_TOOL_"].setClass(kaguya::UserdataMetatable<httpevent::lua::form_tool>()
+                        .setConstructors < httpevent::lua::form_tool(
+                        httpevent::form *)>()
+                        .addFunction("get_form", &httpevent::lua::form_tool::get_form)
+                        .addFunction("has_form", &httpevent::lua::form_tool::has_form)
                         );
             }
         }
-        std::string lua_directory;
+
+        void register_session_tool_class(kaguya::State& state) {
+            if (!state["_SESSION_TOOL_"]) {
+                state["_SESSION_TOOL_"].setClass(kaguya::UserdataMetatable<httpevent::lua::session_tool>()
+                        .setConstructors < httpevent::lua::session_tool(
+                        std::map<std::string, std::string>*)>()
+                        .addFunction("set_session", &httpevent::lua::session_tool::set_session)
+                        .addFunction("get_session", &httpevent::lua::session_tool::get_session)
+                        .addFunction("has_session", &httpevent::lua::session_tool::has_session)
+                        );
+            }
+        }
+
+        void register_util_tool_class(kaguya::State& state) {
+            if (!state["_UTIL_TOOL_"]) {
+                state["_UTIL_TOOL_"].setClass(kaguya::UserdataMetatable<httpevent::lua::util_tool>()
+                        .setConstructors < httpevent::lua::util_tool(
+                        httpevent::response*)>()
+                        .addFunction("redirect", &httpevent::lua::util_tool::redirect)
+                        .addFunction("error", &httpevent::lua::util_tool::error)
+                        );
+            }
+        }
+
+        void register_cookie_tool_class(kaguya::State& state) {
+            if (!state["_COOKIE_TOOL_"]) {
+                state["_COOKIE_TOOL_"].setClass(kaguya::UserdataMetatable<httpevent::lua::cookie_tool>()
+                        .setConstructors < httpevent::lua::cookie_tool(
+                        httpevent::response*
+                        , httpevent::cookies*)>()
+                        .addFunction("set_cookie", &httpevent::lua::cookie_tool::set_cookie)
+                        .addFunction("get_cookie", &httpevent::lua::cookie_tool::get_cookie)
+                        .addFunction("has_cookie", &httpevent::lua::cookie_tool::has_cookie)
+                        );
+            }
+        }
+        const std::string lua_directory;
     public:
 
         void handler(const request& req, response& res) {
             Poco::URI uri(req.get_uri());
             Poco::File script(this->lua_directory + uri.getPath());
             if (script.exists()) {
-                if (script.canExecute()) {
+                if (script.canExecute() && this->lua_state) {
                     kaguya::State &state = *this->lua_state;
-                    this->register_custom_class(state);
+                    httpevent::lua::cookie_tool *cookie_tool_instance = 0;
+                    if (this->cookie_data) {
+                        this->register_cookie_tool_class(state);
+                        cookie_tool_instance = new httpevent::lua::cookie_tool(&res, this->cookie_data);
+                        state["httpevent"]["cookie_tool"] = cookie_tool_instance;
+                    }
+                    httpevent::lua::session_tool* session_tool_instance = 0;
+                    if (this->session_data) {
+                        this->register_session_tool_class(state);
+                        session_tool_instance = new httpevent::lua::session_tool(this->session_data);
+                        state["httpevent"]["session_tool"] = session_tool_instance;
+                    }
 
-                    httpevent::lua::lua_tool lua_tool_instance(&res, this->cookie_data, this->session_data);
-                    state["httpevent"]["lua_tool"] = &lua_tool_instance;
+                    this->register_util_tool_class(state);
+                    httpevent::lua::util_tool util_tool_instance(&res);
+                    state["httpevent"]["util_tool"] = &util_tool_instance;
 
-
-                    std::map<std::string, std::string> form_data;
                     httpevent::upload_handler upload_handler("upload");
                     httpevent::form form(req, &upload_handler);
                     auto upload_result = upload_handler.get_data();
-                    for (auto & item : form) {
-                        form_data[item.first] = item.second.toString();
-                    }
                     for (auto & item : upload_result) {
                         if (item.ok) {
-                            form_data[item.name] = item.webpath;
+                            form[item.name] = item.webpath;
                         }
                     }
-                    state["httpevent"]["FORM"] = form_data;
 
-
-                    std::map<std::string, std::string> cookies_data;
-                    for (auto& item : * this->cookie_data) {
-                        cookies_data[item.first] = item.second.toString();
-                    }
-                    state["httpevent"]["COOKIE"] = cookies_data;
+                    this->register_form_tool_class(state);
+                    httpevent::lua::form_tool form_tool_instance(&form);
+                    state["httpevent"]["form_tool"] = &form_tool_instance;
 
 
                     std::string err_msg;
@@ -124,6 +205,12 @@ namespace httpevent {
                     state.dofile(script.path());
                     if (!err_msg.empty()) {
                         res.send_body(err_msg).submit();
+                    }
+                    if (cookie_tool_instance) {
+                        delete cookie_tool_instance;
+                    }
+                    if (session_tool_instance) {
+                        delete session_tool_instance;
                     }
 
                 } else {

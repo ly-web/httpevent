@@ -56,9 +56,9 @@ static void update_mime_type() {
 static std::string get_mime_type(const std::string& file) {
     const std::string ext = Poco::Path(file).getExtension();
     if (ext.empty() || MIME_SRC.find(ext) == MIME_SRC.end()) {
-        return MIME_SRC.at("*");
+        return MIME_SRC["*"];
     }
-    return MIME_SRC.at(ext);
+    return MIME_SRC[ext];
 }
 
 static void init_callback_config(Poco::Util::LayeredConfiguration* config) {
@@ -119,8 +119,8 @@ static void delete_static_variable() {
     LOGGER->info("delete CLASS_LOADER");
 }
 
-static std::string generate_cache_key(const httpevent::request& req, const Poco::DynamicAny& any = "") {
-    MD5_ENGINE.update(req.get_method() + Poco::URI(req.get_uri()).getPathAndQuery() + any.convert<std::string>());
+static std::string generate_cache_key(const httpevent::request& req, const std::string& any = "") {
+    MD5_ENGINE.update(req.get_method() + Poco::URI(req.get_uri()).getPathAndQuery() + any);
     return Poco::MD5Engine::digestToHex(MD5_ENGINE.digest());
 }
 
@@ -131,9 +131,7 @@ static void generate_session_cookie(httpevent::response& res, const std::string&
     cookie.setMaxAge(expires);
     cookie.setPath("/");
     cookie.setHttpOnly(true);
-    if (enableSSL) {
-        cookie.setSecure(true);
-    }
+    cookie.setSecure(enableSSL);
     res.send_cookie(cookie);
 }
 
@@ -360,15 +358,15 @@ static void session_request_handler(struct evhttp_request *req, void *arg) {
         httpevent::parse_cookie(head, cookies);
         std::string SESSION_ID_VALUE;
         if (cookies.find(SESSION_ID_KEY) != cookies.end()) {
-            SESSION_ID_VALUE = cookies[SESSION_ID_KEY].convert<std::string>();
+            SESSION_ID_VALUE = cookies[SESSION_ID_KEY];
             if (!SESSION->has(SESSION_ID_VALUE)) {
                 generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
-                SESSION->add(SESSION_ID_VALUE, std::map<std::string, Poco::DynamicAny>());
+                SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
             }
         } else {
             SESSION_ID_VALUE = Poco::UUIDGenerator::defaultGenerator().createRandom().toString();
             generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
-            SESSION->add(SESSION_ID_VALUE, std::map<std::string, Poco::DynamicAny>());
+            SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
         }
         handler->route_data = &route_result.second;
         handler->cookie_data = &cookies;
@@ -438,15 +436,15 @@ static void cache_session_request_handler(struct evhttp_request *req, void *arg)
         httpevent::parse_cookie(head, cookies);
         std::string SESSION_ID_VALUE;
         if (cookies.find(SESSION_ID_KEY) != cookies.end()) {
-            SESSION_ID_VALUE = cookies[SESSION_ID_KEY].convert<std::string>();
+            SESSION_ID_VALUE = cookies[SESSION_ID_KEY];
             if (!SESSION->has(SESSION_ID_VALUE)) {
                 generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
-                SESSION->add(SESSION_ID_VALUE, std::map<std::string, Poco::DynamicAny>());
+                SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
             }
         } else {
             SESSION_ID_VALUE = Poco::UUIDGenerator::defaultGenerator().createRandom().toString();
             generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
-            SESSION->add(SESSION_ID_VALUE, std::map<std::string, Poco::DynamicAny>());
+            SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
         }
         handler->route_data = &route_result.second;
         handler->cookie_data = &cookies;
@@ -477,7 +475,7 @@ static void generic_request_handler(struct evhttp_request *req, void *arg) {
             , &uri = request.get_uri()
             , &method = request.get_method();
     if (HTTP_PROXY_USED) {
-        const std::string& real_ip = head.at(REAL_IP_HEAD);
+        const std::string& real_ip = head[REAL_IP_HEAD];
         if (!real_ip.empty()) {
             client_ip = real_ip;
         }
@@ -485,7 +483,7 @@ static void generic_request_handler(struct evhttp_request *req, void *arg) {
 
     if (ENABLE_HOTLINKING && head.find(REFERER_HEAD) != head.end()) {
         Poco::RegularExpression hotlinkRegex(MATCH_HOTLINKING);
-        if (!hotlinkRegex.match(Poco::URI(head.at(REFERER_HEAD).convert<std::string>()).getHost())) {
+        if (!hotlinkRegex.match(Poco::URI(head[REFERER_HEAD]).getHost())) {
             evhttp_send_error(req, 403, HTTPERR_403);
             logger(client_ip
                     , user_agent
@@ -568,15 +566,15 @@ static void generic_request_handler(struct evhttp_request *req, void *arg) {
         httpevent::parse_cookie(head, cookies);
         std::string SESSION_ID_VALUE;
         if (cookies.find(SESSION_ID_KEY) != cookies.end()) {
-            SESSION_ID_VALUE = cookies[SESSION_ID_KEY].convert<std::string>();
+            SESSION_ID_VALUE = cookies[SESSION_ID_KEY];
             if (!SESSION->has(SESSION_ID_VALUE)) {
                 generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
-                SESSION->add(SESSION_ID_VALUE, std::map<std::string, Poco::DynamicAny>());
+                SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
             }
         } else {
             SESSION_ID_VALUE = Poco::UUIDGenerator::defaultGenerator().createRandom().toString();
             generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
-            SESSION->add(SESSION_ID_VALUE, std::map<std::string, Poco::DynamicAny>());
+            SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
         }
         handler->route_data = &route_result.second;
         handler->cookie_data = &cookies;

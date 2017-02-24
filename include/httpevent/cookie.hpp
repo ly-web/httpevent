@@ -12,7 +12,7 @@ namespace httpevent {
 
     static void parse_cookie(const head& header, cookies& cookies) {
         if (header.find("Cookie") != header.end()) {
-            std::string cookie_string = "cooke;" + header.at("Cookie").convert<std::string>(), tmp;
+            std::string cookie_string = "cooke;" + header.at("Cookie"), tmp;
             Poco::Net::NameValueCollection nvc;
             Poco::Net::HTTPMessage::splitParameters(cookie_string, tmp, nvc);
             for (auto & item : nvc) {

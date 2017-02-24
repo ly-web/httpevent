@@ -13,6 +13,7 @@ namespace httpevent {
         }
 
     };
+
     class upload : public view {
 
         void handler(const request& req, response& res) {
@@ -32,6 +33,7 @@ namespace httpevent {
     };
 
     class data : public view {
+    public:
 
         void handler(const request& req, response& res) {
             res.send_head("Content-Type", "text/plain;charset=UTF-8")
@@ -42,19 +44,25 @@ namespace httpevent {
             if (this->cookie_data) {
                 res.send_body("cookie_data:\r\n");
                 for (auto& item : * this->cookie_data) {
-                    res.send_body(item.first + ":\t" + item.second.convert<std::string>() + "\r\n");
+                    res.send_body(item.first + ":\t" + item.second + "\r\n");
                 }
             }
             if (this->session_data) {
                 res.send_body("session variable\r\n");
                 if (this->session_data->find("TEST") == this->session_data->end()) {
-                    this->session_data->insert(std::make_pair("TEST", 0));
+                    this->session_data->insert(std::make_pair("TEST", "0"));
                 } else {
-                    ++this->session_data->at("TEST");
+                    (*this->session_data)["TEST"] = this->inc((*this->session_data)["TEST"]);
                 }
-                res.send_body("TEST:\t" + this->session_data->at("TEST").convert<std::string>())
+                res.send_body("TEST:\t" + this->session_data->at("TEST"))
                         .submit();
             }
+        }
+    private:
+
+        std::string inc(const std::string & num) {
+            int n = Poco::NumberParser::parse(num);
+            return Poco::NumberFormatter::format(++n);
         }
 
     };

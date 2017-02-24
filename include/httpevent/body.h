@@ -43,12 +43,11 @@ namespace httpevent {
             struct evbuffer *buf = evhttp_request_get_input_buffer(this->req);
             std::size_t buf_size = evbuffer_get_length(buf);
             if (buf_size) {
-                char *buf_data = new char[buf_size + 1];
+                char buf_data [buf_size + 1];
                 ev_ssize_t n = evbuffer_copyout(buf, buf_data, buf_size + 1);
                 if (n >= 0) {
                     this->data.assign(buf_data, n);
                 }
-                delete[] buf_data;
             }
         }
     private:

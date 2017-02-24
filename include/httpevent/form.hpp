@@ -75,7 +75,7 @@ namespace httpevent {
             poco_req.setURI(uri);
             poco_req.setVersion(Poco::Net::HTTPRequest::HTTP_1_1);
             if (this->head_data.find("Content-Type") != this->head_data.end()) {
-                poco_req.setContentType(this->head_data.at("Content-Type").convert<std::string>());
+                poco_req.setContentType(this->head_data["Content-Type"]);
             }
 
             Poco::Net::HTMLForm* poco_form = 0;

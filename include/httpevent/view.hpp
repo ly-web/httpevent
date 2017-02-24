@@ -25,7 +25,7 @@ namespace httpevent {
 
         std::vector<std::string> *route_data;
         httpevent::cookies *cookie_data;
-        std::map<std::string, Poco::DynamicAny>* session_data;
+        std::map<std::string, std::string>* session_data;
         kaguya::State * lua_state;
     };
 }
