@@ -138,7 +138,7 @@ namespace httpevent {
                         CB = generic_request_handler;
                         break;
                     default:
-                        CB = simple_request_handler;
+                        CB = generic_request_handler;
                 }
                 evhttp_set_gencb(SERVER, CB, NULL);
                 evhttp_set_default_content_type(SERVER, DEFAULT_CONTENT_TYPE.c_str());

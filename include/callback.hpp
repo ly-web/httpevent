@@ -20,6 +20,7 @@ static void init_lua_state() {
             .addFunction("get_user_agent", &httpevent::request::get_user_agent)
             );
     LUA_STATE["httpevent"] = kaguya::NewTable();
+    LUA_STATE["httpevent"]["CONFIG"] = CONFIG_MAP;
 }
 
 static void config_lua_state(httpevent::request* req, httpevent::response* res, std::vector<std::string>& route_data) {
@@ -61,6 +62,21 @@ static std::string get_mime_type(const std::string& file) {
     return MIME_SRC[ext];
 }
 
+static void init_config_map(Poco::Util::LayeredConfiguration* config) {
+    Poco::Util::AbstractConfiguration::Keys rootKeys, configKeys;
+    config->keys(rootKeys);
+    std::string tmp;
+    for (auto& rootItem : rootKeys) {
+        config->keys(rootItem, configKeys);
+        for (auto& confItem : configKeys) {
+            tmp = rootItem + "." + confItem;
+            CONFIG_MAP[tmp] = config->getString(tmp, "none");
+        }
+        configKeys.clear();
+    }
+
+}
+
 static void init_callback_config(Poco::Util::LayeredConfiguration* config) {
     SERVER_TYPE = config->getInt("http.serverType", 3);
     MIME_SRC_FILE = config->getString("http.mime", "/etc/httpevent/mime.conf");
@@ -95,6 +111,7 @@ static void init_callback_config(Poco::Util::LayeredConfiguration* config) {
     CERT_PRIVATE_KEY_FILE = config->getString("http.certPrivateKeyFile", "/var/httpevent/cert/server.key");
     UPDATE_INTERVAL = config->getInt64("http.updateLibraryInterval", 300);
     LUA_DIRECTORY = config->getString("http.luaDirectory", "/var/httpevent/lua");
+    init_config_map(config);
 }
 
 static void delete_handler() {
@@ -322,7 +339,8 @@ static void cache_request_handler(struct evhttp_request *req, void *arg) {
         handler->lua_state = &LUA_STATE;
         handler->handler(request, response);
         if (!response.is_sent()) {
-            CACHE->add(cache_head_id, evhttp_find_header(evhttp_request_get_output_headers(req), CONTENT_TYPE_HEAD));
+            const char* cache_head = evhttp_find_header(evhttp_request_get_output_headers(req), CONTENT_TYPE_HEAD);
+            CACHE->add(cache_head_id, cache_head ? cache_head : DEFAULT_CONTENT_TYPE);
             CACHE->add(cache_body_id, response.get_response_data());
             response.submit(200, HTTP_STATUS_200);
         }
@@ -453,7 +471,8 @@ static void cache_session_request_handler(struct evhttp_request *req, void *arg)
         handler->lua_state = &LUA_STATE;
         handler->handler(request, response);
         if (!response.is_sent()) {
-            CACHE->add(cache_head_id, evhttp_find_header(evhttp_request_get_output_headers(req), CONTENT_TYPE_HEAD));
+            const char* cache_head = evhttp_find_header(evhttp_request_get_output_headers(req), CONTENT_TYPE_HEAD);
+            CACHE->add(cache_head_id, cache_head ? cache_head : DEFAULT_CONTENT_TYPE);
             CACHE->add(cache_body_id, response.get_response_data());
             response.submit(200, HTTP_STATUS_200);
         }
@@ -583,7 +602,8 @@ static void generic_request_handler(struct evhttp_request *req, void *arg) {
         handler->lua_state = &LUA_STATE;
         handler->handler(request, response);
         if (!response.is_sent()) {
-            CACHE->add(cache_head_id, evhttp_find_header(evhttp_request_get_output_headers(req), CONTENT_TYPE_HEAD));
+            const char* cache_head = evhttp_find_header(evhttp_request_get_output_headers(req), CONTENT_TYPE_HEAD);
+            CACHE->add(cache_head_id, cache_head ? cache_head : DEFAULT_CONTENT_TYPE);
             CACHE->add(cache_body_id, response.get_response_data());
             response.submit(200, HTTP_STATUS_200);
         }

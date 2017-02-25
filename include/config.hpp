@@ -11,9 +11,6 @@
 #include "cache.hpp"
 
 
-
-
-
 static const char* LAST_MODIFIED_HEAD = "Last-Modified";
 static const char* IF_MODIFIED_SINCE_HEAD = "If-Modified-Since";
 static const char* ETAG_HEAD = "Etag";
@@ -77,6 +74,7 @@ static bool ENABLE_LOGGER;
 static std::map<std::string, std::string> MIME_SRC;
 static std::map<std::string, httpevent::view*> HANDLER;
 static Poco::Util::LayeredConfiguration* CONFIG = 0;
+static std::map<std::string, std::string> CONFIG_MAP;
 static Poco::ClassLoader<httpevent::view>* CLASS_LOADER = 0;
 static httpevent::plugin* PLUGIN = 0;
 static httpevent::filter* FILTER = 0;
