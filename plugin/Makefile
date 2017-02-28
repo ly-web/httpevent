@@ -3,11 +3,11 @@ MOD=mod/demo.so
 MODSRC=$(wildcard *.cpp)
 MODOBJ=$(patsubst %.cpp,%.o,$(MODSRC))
 
-
+LUA=luajit
 
 CC=g++
-CXXFLAGS+=-O3 -std=c++11 -fPIC -Wall  `pkg-config --cflags luajit libevent_openssl openssl`
-LDLIBS+=`pkg-config --libs luajit libevent_openssl openssl`  -lpthread
+CXXFLAGS+=-O3 -std=c++11 -fPIC -Wall  `pkg-config --cflags $(LUA) libevent_openssl openssl`
+LDLIBS+=`pkg-config --libs $(LUA) libevent_openssl openssl`  -lpthread
 LDLIBS+=-lPocoUtil -lPocoCrypto -lPocoNet -lPocoFoundation
 LDFLAGS+=-shared
 

@@ -7,17 +7,17 @@
 --local session_tool = httpevent.session_tool
 --local util_tool = httpevent.util_tool
 
-function dispatch(str)
-  local m = nil
-  m = dofile (httpevent.CONFIG.http.luaDirectory .. '/' .. str..'.lua')
-  if(m ~= nil) then
-    m.main()
-    if not m.enable_cache then
-      httpevent.util_tool:submit(200,'OK')
-    end
-  else
-    httpevent.util_tool:error(404,'Not found')
+function httpevent.show_error(err)
+  httpevent.util_tool:error(501,"Could not run script")
+end
+
+function httpevent.dispatch(str)
+  local m = dofile (httpevent.CONFIG.http.luaDirectory .. '/' .. str..'.lua')
+  xpcall(m.main,httpevent.show_error)
+  if not m.enable_cache then
+    httpevent.util_tool:submit(200,'OK')
   end
 end
 
-dispatch(httpevent.ROUTE[2])
+
+httpevent.dispatch(httpevent.ROUTE[2])

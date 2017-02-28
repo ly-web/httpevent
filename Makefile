@@ -1,9 +1,10 @@
 PROJECT=httpevent
 SRC=$(wildcard *.cpp src/*.cpp)
 OBJ=$(patsubst %.cpp,%.o,$(SRC))
+LUA=luajit
 CC=g++
-CXXFLAGS=-std=c++11 -O3 -Wall -I./include `pkg-config --cflags luajit libevent_openssl openssl`
-LDLIBS+=`pkg-config --libs luajit libevent_openssl openssl` -lpthread
+CXXFLAGS=-std=c++11 -O3 -Wall -I./include `pkg-config --cflags $(LUA) libevent_openssl openssl`
+LDLIBS+=`pkg-config --libs $(LUA) libevent_openssl openssl` -lpthread
 LDLIBS+=-lPocoUtil -lPocoCrypto -lPocoNet -lPocoFoundation
 
 
