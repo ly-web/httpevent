@@ -91,7 +91,7 @@ namespace httpevent {
                     auto result = handler->get_data();
                     for (auto & item : result) {
                         if (item.ok) {
-                            kvmap::operator[](item.name) = item.savepath;
+                            kvmap::operator[](item.name) = item.webpath;
                         }
                     }
                 }

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>表单示例</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="/upload" enctype="multipart/form-data" method="post" target="_blank">
+            <input type="file" name="upload"/>
+            <input type="submit" value="upload file"/>
+        </form>
+        <hr/>
+        <form action="/aform"  enctype="multipart/form-data" method="post" target="_blank">
+            <input type="file" name="upload"/>
+            <input type="text" name="a"/>
+            <input type="text" name="b"/>
+            <input type="submit" value="c++ post"/>
+        </form>
+        <hr/>
+        <form action="/aform" method="get" target="_blank">
+            <input type="text" name="a"/>
+            <input type="text" name="b"/>
+            <input type="submit" value="c++ get"/>
+        </form>
+        <hr/>
+        <form action="/mod/data.lua" enctype="multipart/form-data" method="post" target="_blank">
+            <input type="file" name="upload"/>
+            <input type="text" name="a"/>
+            <input type="text" name="b"/>
+            <input type="submit" value="lua post"/>
+        </form>
+        <hr/>
+        <form action="/mod/data.lua" method="get" target="_blank">
+            <input type="text" name="a"/>
+            <input type="text" name="b"/>
+            <input type="submit" value="lua get"/>
+        </form>
+    </body>
+</html>

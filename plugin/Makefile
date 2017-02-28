@@ -28,5 +28,7 @@ install:
 	install mod/demo.so /var/httpevent/mod
 	install  www/*.* /var/httpevent/www
 	install  lua/*.* /var/httpevent/lua
+	mkdir -pv /var/httpevent/lua/mod
+	install  lua/mod/*.* /var/httpevent/lua/mod
 	systemctl start httpevent
 

@@ -40,7 +40,7 @@ namespace httpevent {
         void parse() {
             struct evkeyvalq *headers = evhttp_request_get_input_headers(this->req);
             for (struct evkeyval *header = headers->tqh_first; header; header = header->next.tqe_next) {
-                kvmap::operator[](header->key) = std::string(header->value);
+                kvmap::operator[](header->key) = header->value;
             }
         }
 

@@ -65,13 +65,14 @@ static std::string get_mime_type(const std::string& file) {
 static void init_config_map(Poco::Util::LayeredConfiguration* config) {
     Poco::Util::AbstractConfiguration::Keys rootKeys, configKeys;
     config->keys(rootKeys);
-    std::string tmp;
     for (auto& rootItem : rootKeys) {
+        std::map<std::string, std::string> tmp_map;
         config->keys(rootItem, configKeys);
         for (auto& confItem : configKeys) {
-            tmp = rootItem + "." + confItem;
-            CONFIG_MAP[tmp] = config->getString(tmp, "none");
+            tmp_map[confItem] = config->getString(rootItem + "." + confItem, "none");
+
         }
+        CONFIG_MAP[rootItem] = tmp_map;
         configKeys.clear();
     }
 
