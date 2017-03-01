@@ -7,7 +7,6 @@ local session_tool = httpevent.session_tool
 local session_key = 'HTTPEVENTSESSIONID'
 
 local data={}
-data['enable_cache']=false
 
 function data.main ()
 

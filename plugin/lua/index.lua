@@ -14,9 +14,6 @@ end
 function httpevent.dispatch(str)
   local m = dofile (httpevent.CONFIG.http.luaDirectory .. '/' .. str..'.lua')
   xpcall(m.main,httpevent.show_error)
-  if not m.enable_cache then
-    httpevent.util_tool:submit(200,'OK')
-  end
 end
 
 
