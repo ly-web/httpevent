@@ -9,7 +9,7 @@ namespace httpevent {
 
         void handler(const request& req, response& res) {
             res.send_head("Content-Type", "text/plain;charset=UTF-8")
-                    .send_body("hello,world").submit();
+                    .send_body("hello,world");
         }
 
     };
