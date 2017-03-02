@@ -108,7 +108,7 @@ httpevent提供系统级的缓存服务，对于3、4、5型服务器，只要�
 一旦调用submit方法，系统就会认为该内容无需缓存。
 
 ## 压力测试
-以下数据以3型服务器为基准，压力测试工具为ab(ubuntu 16.10,i5-5200,4G,U笔记本)
+以下数据以3型服务器为基准，压力测试工具为ab(ubuntu 16.10,i5-5200U,4G,笔记本)
 
 - c++ hello world
 
@@ -124,7 +124,7 @@ httpevent提供系统级的缓存服务，对于3、4、5型服务器，只要�
 ## 依赖
 
 - libevent v2.1.8+
-- poco framework v1.6+
+- Poco framework v1.6+
 - lua devel v5.1+
 - openssl devel
 
