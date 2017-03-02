@@ -130,3 +130,11 @@ httpevent提供系统级的缓存服务，对于3、4、5型服务器，只要�
 
 ## 安装
 `build.sh`
+
+## 配置
+`/etc/httpevent/httpevent.properties`
+
+## 运行
+`sudo systemctl enable httpevent`
+
+`sudo systemctl (start|stop|restart|status) httpevent`
