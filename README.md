@@ -124,6 +124,9 @@ httpevent提供系统级的缓存服务，对于3、4、5型服务器，只要�
 ## 依赖
 
 - libevent v2.1.8+
-- poco framework
-- lua devel
+- poco framework v1.6+
+- lua devel v5.1+
 - openssl devel
+
+## 安装
+`build.sh`
