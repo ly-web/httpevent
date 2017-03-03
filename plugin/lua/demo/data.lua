@@ -4,6 +4,7 @@ local route_data=httpevent.ROUTE
 local form_tool= httpevent.form_tool
 local cookie_tool= httpevent.cookie_tool
 local session_tool = httpevent.session_tool
+local util_tool = httpevent.util_tool
 local session_key = 'HTTPEVENTSESSIONID'
 
 local data={}
@@ -38,6 +39,8 @@ function data.main ()
     :send_body('uri:\t'..req:get_uri().."\n")
     :send_body('method:\t'..req:get_method().."\n")
     :send_body('user_agent:\t'..req:get_user_agent().."\n")
+
+  util_tool:submit(200,'OK')
 
 end
 

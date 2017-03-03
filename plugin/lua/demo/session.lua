@@ -18,6 +18,8 @@ function session.main()
   end
   res:send_head("Content-Type", "text/plain;charset=UTF-8")
     :send_body(session_key..'\t='..session_value)
+
+  httpevent.util_tool:submit(200,'OK')
 end
 
 return  session
