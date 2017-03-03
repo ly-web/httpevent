@@ -77,11 +77,15 @@ namespace httpevent {
             for (auto &item : this->route_data) {
                 const std::string& M = item.get_method();
                 const std::string& P = item.get_pattern();
-                Poco::RegularExpression regex(P);
-                if (method == M && regex.match(path)) {
-                    regex.split(path, result.second);
-                    result.first = item.get_class_name();
-                    break;
+                try {
+                    Poco::RegularExpression regex(P);
+                    if (method == M && regex.match(path)) {
+                        regex.split(path, result.second);
+                        result.first = item.get_class_name();
+                        break;
+                    }
+                } catch (Poco::RegularExpressionException& e) {
+
                 }
             }
             return result;
