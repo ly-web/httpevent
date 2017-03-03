@@ -138,3 +138,8 @@ httpevent提供系统级的缓存服务，对于3、4、5型服务器，只要�
 `sudo systemctl enable httpevent`
 
 `sudo systemctl (start|stop|restart|status) httpevent`
+
+## 捐赠
+若httpevent对你有所帮助，欢迎你对该项目提供一些捐赠
+
+![捐赠二维码](https://github.com/webcpp/httpevent/blob/master/www/assets/donate.png)
