@@ -139,6 +139,11 @@ httpevent提供系统级的缓存服务，对于3、4、5型服务器，只要�
 
 `sudo systemctl (start|stop|restart|status) httpevent`
 
+## 优化使用建议
+- C/C++可能比lua更适合需要密集计算的业务
+- 避免使用过于复杂的聚合型路由规则，路由表长一点可能更快
+- 绝不要require包含lua api的模块，用dofile替代
+
 ## 捐赠
 若httpevent对你有所帮助，欢迎你对该项目提供一些捐赠
 
