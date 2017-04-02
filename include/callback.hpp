@@ -378,15 +378,16 @@ static void session_request_handler(struct evhttp_request *req, void *arg) {
         std::string SESSION_ID_VALUE;
         if (cookies.find(SESSION_ID_KEY) != cookies.end()) {
             SESSION_ID_VALUE = cookies[SESSION_ID_KEY];
-            if (!SESSION->has(SESSION_ID_VALUE)) {
-                generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
-                SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
-            }
         } else {
             SESSION_ID_VALUE = Poco::UUIDGenerator::defaultGenerator().createRandom().toString();
             generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
+        }
+
+        if (!SESSION->has(SESSION_ID_VALUE)) {
             SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
         }
+
+
         handler->route_data = &route_result.second;
         handler->cookie_data = &cookies;
         handler->session_data = SESSION->get(SESSION_ID_VALUE).get();
@@ -456,15 +457,15 @@ static void cache_session_request_handler(struct evhttp_request *req, void *arg)
         std::string SESSION_ID_VALUE;
         if (cookies.find(SESSION_ID_KEY) != cookies.end()) {
             SESSION_ID_VALUE = cookies[SESSION_ID_KEY];
-            if (!SESSION->has(SESSION_ID_VALUE)) {
-                generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
-                SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
-            }
         } else {
             SESSION_ID_VALUE = Poco::UUIDGenerator::defaultGenerator().createRandom().toString();
             generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
+        }
+
+        if (!SESSION->has(SESSION_ID_VALUE)) {
             SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
         }
+
         handler->route_data = &route_result.second;
         handler->cookie_data = &cookies;
         handler->session_data = SESSION->get(SESSION_ID_VALUE).get();
@@ -587,15 +588,15 @@ static void generic_request_handler(struct evhttp_request *req, void *arg) {
         std::string SESSION_ID_VALUE;
         if (cookies.find(SESSION_ID_KEY) != cookies.end()) {
             SESSION_ID_VALUE = cookies[SESSION_ID_KEY];
-            if (!SESSION->has(SESSION_ID_VALUE)) {
-                generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
-                SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
-            }
         } else {
             SESSION_ID_VALUE = Poco::UUIDGenerator::defaultGenerator().createRandom().toString();
             generate_session_cookie(response, SESSION_ID_KEY, SESSION_ID_VALUE, HTTP_EXPIRES, ENABLE_SSL);
+        }
+
+        if (!SESSION->has(SESSION_ID_VALUE)) {
             SESSION->add(SESSION_ID_VALUE, std::map<std::string, std::string>());
         }
+
         handler->route_data = &route_result.second;
         handler->cookie_data = &cookies;
         handler->session_data = SESSION->get(SESSION_ID_VALUE).get();
