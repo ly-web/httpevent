@@ -116,10 +116,10 @@ static void init_callback_config(Poco::Util::LayeredConfiguration* config) {
 }
 
 static void delete_handler() {
-    for (auto item : HANDLER) {
-        delete item.second;
-        LOGGER->info("delete handler {0}", item.first);
-    }
+//    for (auto item : HANDLER) {
+//        delete item.second;
+//        LOGGER->info("delete handler {0}", item.first);
+//    }
 }
 
 static void delete_static_variable() {
@@ -263,15 +263,15 @@ static void simple_request_handler(struct evhttp_request * req, void* arg) {
     httpevent::route::route_result_t route_result = ROUTER->get_route(request.get_method(), request.get_uri());
 
     if (!route_result.second.empty()) {
-        if (HANDLER.find(route_result.first) == HANDLER.end()) {
+//        if (HANDLER.find(route_result.first) == HANDLER.end()) {
             auto finded = CLASS_LOADER->findClass(route_result.first);
             if (finded && finded->canCreate()) {
                 handler = CLASS_LOADER->create(route_result.first);
-                HANDLER[route_result.first] = handler;
+//                HANDLER[route_result.first] = handler;
             }
-        } else {
-            handler = HANDLER[route_result.first];
-        }
+//        } else {
+//            handler = HANDLER[route_result.first];
+//        }
     }
     if (handler) {
         handler->route_data = &route_result.second;
@@ -312,15 +312,15 @@ static void cache_request_handler(struct evhttp_request *req, void *arg) {
     httpevent::route::route_result_t route_result = ROUTER->get_route(request.get_method(), request.get_uri());
 
     if (!route_result.second.empty()) {
-        if (HANDLER.find(route_result.first) == HANDLER.end()) {
+//        if (HANDLER.find(route_result.first) == HANDLER.end()) {
             auto finded = CLASS_LOADER->findClass(route_result.first);
             if (finded && finded->canCreate()) {
                 handler = CLASS_LOADER->create(route_result.first);
-                HANDLER[route_result.first] = handler;
+//                HANDLER[route_result.first] = handler;
             }
-        } else {
-            handler = HANDLER[route_result.first];
-        }
+//        } else {
+//            handler = HANDLER[route_result.first];
+//        }
     }
     if (handler) {
         response.send_head(ETAG_HEAD, ETAG_VALUE)
@@ -362,15 +362,15 @@ static void session_request_handler(struct evhttp_request *req, void *arg) {
     httpevent::route::route_result_t route_result = ROUTER->get_route(request.get_method(), request.get_uri());
 
     if (!route_result.second.empty()) {
-        if (HANDLER.find(route_result.first) == HANDLER.end()) {
+//        if (HANDLER.find(route_result.first) == HANDLER.end()) {
             auto finded = CLASS_LOADER->findClass(route_result.first);
             if (finded && finded->canCreate()) {
                 handler = CLASS_LOADER->create(route_result.first);
-                HANDLER[route_result.first] = handler;
+//                HANDLER[route_result.first] = handler;
             }
-        } else {
-            handler = HANDLER[route_result.first];
-        }
+//        } else {
+//            handler = HANDLER[route_result.first];
+//        }
     }
     if (handler) {
         httpevent::cookies cookies;
@@ -429,15 +429,15 @@ static void cache_session_request_handler(struct evhttp_request *req, void *arg)
     httpevent::route::route_result_t route_result = ROUTER->get_route(request.get_method(), request.get_uri());
 
     if (!route_result.second.empty()) {
-        if (HANDLER.find(route_result.first) == HANDLER.end()) {
+//        if (HANDLER.find(route_result.first) == HANDLER.end()) {
             auto finded = CLASS_LOADER->findClass(route_result.first);
             if (finded && finded->canCreate()) {
                 handler = CLASS_LOADER->create(route_result.first);
-                HANDLER[route_result.first] = handler;
+//                HANDLER[route_result.first] = handler;
             }
-        } else {
-            handler = HANDLER[route_result.first];
-        }
+//        } else {
+//            handler = HANDLER[route_result.first];
+//        }
     }
     if (handler) {
         response.send_head(ETAG_HEAD, ETAG_VALUE)
@@ -555,15 +555,15 @@ static void generic_request_handler(struct evhttp_request *req, void *arg) {
     httpevent::route::route_result_t route_result = ROUTER->get_route(request.get_method(), request.get_uri());
 
     if (!route_result.second.empty()) {
-        if (HANDLER.find(route_result.first) == HANDLER.end()) {
+//        if (HANDLER.find(route_result.first) == HANDLER.end()) {
             auto finded = CLASS_LOADER->findClass(route_result.first);
             if (finded && finded->canCreate()) {
                 handler = CLASS_LOADER->create(route_result.first);
-                HANDLER[route_result.first] = handler;
+//                HANDLER[route_result.first] = handler;
             }
-        } else {
-            handler = HANDLER[route_result.first];
-        }
+//        } else {
+//            handler = HANDLER[route_result.first];
+//        }
     }
     if (handler) {
         response.send_head(ETAG_HEAD, ETAG_VALUE)
