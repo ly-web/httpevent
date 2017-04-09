@@ -32,12 +32,7 @@ namespace httpevent {
                     .required(false)
                     .repeatable(false)
                     .callback(Poco::Util::OptionCallback<httpevent::server>(this, &httpevent::server::handleHelp)));
-            options.addOption(
-                    Poco::Util::Option("show-config", "s", "display config information")
-                    .required(false)
-                    .repeatable(false)
-                    .callback(Poco::Util::OptionCallback<httpevent::server>(this, &httpevent::server::handleShowConfig)));
-
+            
             options.addOption(
                     Poco::Util::Option("config", "c", "load configuration data from a file")
                     .required(true)
@@ -45,23 +40,6 @@ namespace httpevent {
                     .argument("file")
                     .callback(Poco::Util::OptionCallback<httpevent::server>(this, &httpevent::server::handleConfig)));
 
-        }
-
-        void handleShowConfig(const std::string& name, const std::string& value) {
-            this->helpRequested = true;
-            Poco::Util::AbstractConfiguration::Keys rootKeys, configKeys;
-            CONFIG->keys(rootKeys);
-
-            for (auto& rootItem : rootKeys) {
-
-                CONFIG->keys(rootItem, configKeys);
-                for (auto& confItem : configKeys) {
-
-                    std::cout << rootItem + "." + confItem << "\t" << CONFIG->getString(rootItem + "." + confItem, "none") << std::endl;
-                }
-
-                configKeys.clear();
-            }
         }
 
         void handleHelp(const std::string& name, const std::string& value) {
