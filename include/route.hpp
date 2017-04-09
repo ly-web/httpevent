@@ -5,7 +5,7 @@
 #include <vector>
 #include <map>
 #include <fstream>
-#include <Poco//StringTokenizer.h>
+#include <Poco/StringTokenizer.h>
 #include <Poco/RegularExpression.h>
 
 namespace httpevent {
@@ -93,14 +93,16 @@ namespace httpevent {
     private:
 
         void init() {
-            std::ifstream input(this->route_path);
-            if (input) {
-                std::string line;
-                while (std::getline(input, line)) {
-                    if (line.front() != '#' && !line.empty()) {
-                        Poco::StringTokenizer st(line, ",;", Poco::StringTokenizer::TOK_TRIM | Poco::StringTokenizer::TOK_IGNORE_EMPTY);
-                        if (st.count() == 3) {
-                            this->route_data.push_back(route_element(st[0], st[1], st[2]));
+            if (!this->route_path.empty()) {
+                std::ifstream input(this->route_path);
+                if (input) {
+                    std::string line;
+                    while (std::getline(input, line)) {
+                        if (line.front() != '#' && !line.empty()) {
+                            Poco::StringTokenizer st(line, ",;", Poco::StringTokenizer::TOK_TRIM | Poco::StringTokenizer::TOK_IGNORE_EMPTY);
+                            if (st.count() == 3) {
+                                this->route_data.push_back(route_element(st[0], st[1], st[2]));
+                            }
                         }
                     }
                 }

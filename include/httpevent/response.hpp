@@ -85,7 +85,7 @@ namespace httpevent {
                 std::size_t buf_size = evbuffer_get_length(res);
                 if (buf_size) {
                     char buf_data[buf_size + 1];
-                    ev_ssize_t n = evbuffer_copyout(res, buf_data, buf_size + 1);
+                    ev_ssize_t n = evbuffer_remove(res, buf_data, buf_size + 1);
                     if (n >= 0) {
                         result.assign(buf_data, n);
                     }

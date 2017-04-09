@@ -31,7 +31,7 @@ namespace httpevent {
     private:
 
         void load() {
-            if (Poco::File(this->dir).exists()) {
+            if (!this->dir.empty() && Poco::File(this->dir).exists()) {
                 Poco::Path libDir(this->dir);
                 Poco::SortedDirectoryIterator it(libDir), jt;
                 std::string libExt = Poco::SharedLibrary::suffix().substr(1);
