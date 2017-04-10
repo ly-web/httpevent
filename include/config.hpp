@@ -72,7 +72,6 @@ static bool ENABLE_LOGGER;
 
 
 static std::map<std::string, std::string> MIME_SRC;
-//static std::map<std::string, httpevent::view*> HANDLER;
 static Poco::Util::LayeredConfiguration* CONFIG = 0;
 static std::map<std::string, std::map<std::string, std::string>> CONFIG_MAP;
 static Poco::ClassLoader<httpevent::view>* CLASS_LOADER = 0;

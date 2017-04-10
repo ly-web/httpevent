@@ -115,13 +115,6 @@ static void init_callback_config(Poco::Util::LayeredConfiguration* config) {
     init_config_map(config);
 }
 
-static void delete_handler() {
-//    for (auto item : HANDLER) {
-//        delete item.second;
-//        LOGGER->info("delete handler {0}", item.first);
-//    }
-}
-
 static void delete_static_variable() {
     delete CACHE;
     LOGGER->info("delete CACHE");
@@ -259,21 +252,16 @@ static void simple_request_handler(struct evhttp_request * req, void* arg) {
     response.send_head(SERVER_HEAD, SERVER_NAME)
             .send_head(X_POWERED_BY_HEAD, X_Powered_By);
 
-    httpevent::view* handler = 0;
+    Poco::SharedPtr<httpevent::view> handler;
     httpevent::route::route_result_t route_result = ROUTER->get_route(request.get_method(), request.get_uri());
 
     if (!route_result.second.empty()) {
-//        if (HANDLER.find(route_result.first) == HANDLER.end()) {
-            auto finded = CLASS_LOADER->findClass(route_result.first);
-            if (finded && finded->canCreate()) {
-                handler = CLASS_LOADER->create(route_result.first);
-//                HANDLER[route_result.first] = handler;
-            }
-//        } else {
-//            handler = HANDLER[route_result.first];
-//        }
+        auto finded = CLASS_LOADER->findClass(route_result.first);
+        if (finded && finded->canCreate()) {
+            handler.assign(CLASS_LOADER->create(route_result.first));
+        }
     }
-    if (handler) {
+    if (!handler.isNull()) {
         handler->route_data = &route_result.second;
         config_lua_state(&request, &response, route_result.second);
         handler->lua_state = &LUA_STATE;
@@ -308,21 +296,16 @@ static void cache_request_handler(struct evhttp_request *req, void *arg) {
         }
     }
 
-    httpevent::view* handler = 0;
+    Poco::SharedPtr<httpevent::view> handler;
     httpevent::route::route_result_t route_result = ROUTER->get_route(request.get_method(), request.get_uri());
 
     if (!route_result.second.empty()) {
-//        if (HANDLER.find(route_result.first) == HANDLER.end()) {
-            auto finded = CLASS_LOADER->findClass(route_result.first);
-            if (finded && finded->canCreate()) {
-                handler = CLASS_LOADER->create(route_result.first);
-//                HANDLER[route_result.first] = handler;
-            }
-//        } else {
-//            handler = HANDLER[route_result.first];
-//        }
+        auto finded = CLASS_LOADER->findClass(route_result.first);
+        if (finded && finded->canCreate()) {
+            handler.assign(CLASS_LOADER->create(route_result.first));
+        }
     }
-    if (handler) {
+    if (!handler.isNull()) {
         response.send_head(ETAG_HEAD, ETAG_VALUE)
                 .send_head(CACHE_CONTROL_HEAD, std::string("max-age=").append(Poco::NumberFormatter::format(CACHE_CLIENT_EXPIRES)).c_str())
                 .send_head(CACHE_CONTROL_HEAD, "must-revalidate")
@@ -358,21 +341,16 @@ static void session_request_handler(struct evhttp_request *req, void *arg) {
             .send_head(X_POWERED_BY_HEAD, X_Powered_By);
 
     httpevent::head head(request);
-    httpevent::view* handler = 0;
+    Poco::SharedPtr<httpevent::view> handler;
     httpevent::route::route_result_t route_result = ROUTER->get_route(request.get_method(), request.get_uri());
 
     if (!route_result.second.empty()) {
-//        if (HANDLER.find(route_result.first) == HANDLER.end()) {
-            auto finded = CLASS_LOADER->findClass(route_result.first);
-            if (finded && finded->canCreate()) {
-                handler = CLASS_LOADER->create(route_result.first);
-//                HANDLER[route_result.first] = handler;
-            }
-//        } else {
-//            handler = HANDLER[route_result.first];
-//        }
+        auto finded = CLASS_LOADER->findClass(route_result.first);
+        if (finded && finded->canCreate()) {
+            handler.assign(CLASS_LOADER->create(route_result.first));
+        }
     }
-    if (handler) {
+    if (!handler.isNull()) {
         httpevent::cookies cookies;
         httpevent::parse_cookie(head, cookies);
         std::string SESSION_ID_VALUE;
@@ -425,21 +403,16 @@ static void cache_session_request_handler(struct evhttp_request *req, void *arg)
 
     }
 
-    httpevent::view* handler = 0;
+    Poco::SharedPtr<httpevent::view> handler;
     httpevent::route::route_result_t route_result = ROUTER->get_route(request.get_method(), request.get_uri());
 
     if (!route_result.second.empty()) {
-//        if (HANDLER.find(route_result.first) == HANDLER.end()) {
-            auto finded = CLASS_LOADER->findClass(route_result.first);
-            if (finded && finded->canCreate()) {
-                handler = CLASS_LOADER->create(route_result.first);
-//                HANDLER[route_result.first] = handler;
-            }
-//        } else {
-//            handler = HANDLER[route_result.first];
-//        }
+        auto finded = CLASS_LOADER->findClass(route_result.first);
+        if (finded && finded->canCreate()) {
+            handler.assign(CLASS_LOADER->create(route_result.first));
+        }
     }
-    if (handler) {
+    if (!handler.isNull()) {
         response.send_head(ETAG_HEAD, ETAG_VALUE)
                 .send_head(CACHE_CONTROL_HEAD, std::string("max-age=").append(Poco::NumberFormatter::format(CACHE_CLIENT_EXPIRES)).c_str())
                 .send_head(CACHE_CONTROL_HEAD, "must-revalidate")
@@ -551,21 +524,16 @@ static void generic_request_handler(struct evhttp_request *req, void *arg) {
         }
     }
 
-    httpevent::view* handler = 0;
+    Poco::SharedPtr<httpevent::view> handler;
     httpevent::route::route_result_t route_result = ROUTER->get_route(request.get_method(), request.get_uri());
 
     if (!route_result.second.empty()) {
-//        if (HANDLER.find(route_result.first) == HANDLER.end()) {
-            auto finded = CLASS_LOADER->findClass(route_result.first);
-            if (finded && finded->canCreate()) {
-                handler = CLASS_LOADER->create(route_result.first);
-//                HANDLER[route_result.first] = handler;
-            }
-//        } else {
-//            handler = HANDLER[route_result.first];
-//        }
+        auto finded = CLASS_LOADER->findClass(route_result.first);
+        if (finded && finded->canCreate()) {
+            handler.assign(CLASS_LOADER->create(route_result.first));
+        }
     }
-    if (handler) {
+    if (!handler.isNull()) {
         response.send_head(ETAG_HEAD, ETAG_VALUE)
                 .send_head(CACHE_CONTROL_HEAD, std::string("max-age=").append(Poco::NumberFormatter::format(CACHE_CLIENT_EXPIRES)).c_str())
                 .send_head(CACHE_CONTROL_HEAD, "must-revalidate")

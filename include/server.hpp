@@ -32,7 +32,7 @@ namespace httpevent {
                     .required(false)
                     .repeatable(false)
                     .callback(Poco::Util::OptionCallback<httpevent::server>(this, &httpevent::server::handleHelp)));
-            
+
             options.addOption(
                     Poco::Util::Option("config", "c", "load configuration data from a file")
                     .required(true)
@@ -162,7 +162,6 @@ namespace httpevent {
                 }
 
 
-                delete_handler();
                 delete_static_variable();
 
                 LOGGER->info("server closed");
