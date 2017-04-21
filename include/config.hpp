@@ -62,7 +62,8 @@ static long CACHE_EXPIRES;
 static long CACHE_CLIENT_EXPIRES;
 static long SESSION_EXPIRES;
 static long UPDATE_INTERVAL;
-
+static long CLIENT_HEADER_MAX_SIZE;
+static long client_BODY_MAX_SIZE;
 
 static bool HTTP_PROXY_USED;
 static bool ENABLE_HOTLINKING;

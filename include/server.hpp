@@ -121,6 +121,8 @@ namespace httpevent {
                 evhttp_set_gencb(SERVER, CB, NULL);
                 evhttp_set_default_content_type(SERVER, DEFAULT_CONTENT_TYPE.c_str());
                 evhttp_set_timeout(SERVER, TIMEOUT);
+                evhttp_set_max_headers_size(SERVER, CLIENT_HEADER_MAX_SIZE);
+                evhttp_set_max_body_size(SERVER, client_BODY_MAX_SIZE);
 
 
                 signal(SIGHUP, signal_normal_cb);

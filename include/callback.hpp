@@ -111,6 +111,8 @@ static void init_callback_config(Poco::Util::LayeredConfiguration* config) {
     CERT_CERTIFICATE_FILE = config->getString("http.certCertificateFile", "/var/httpevent/cert/server.crt");
     CERT_PRIVATE_KEY_FILE = config->getString("http.certPrivateKeyFile", "/var/httpevent/cert/server.key");
     UPDATE_INTERVAL = config->getInt64("http.updateLibraryInterval", 300);
+    CLIENT_HEADER_MAX_SIZE = config->getInt64("http.client_header_max_size", 8192);
+    client_BODY_MAX_SIZE = config->getInt64("http.client_body_max_size", 1048567);
     LUA_DIRECTORY = config->getString("http.luaDirectory", "/var/httpevent/lua");
     init_config_map(config);
 }
