@@ -4,7 +4,7 @@
 #include "response.hpp"
 #include "cookie.hpp"
 #include "form.hpp"
-#include "kaguya/kaguya.hpp"
+#include "kaguya.hpp"
 
 namespace httpevent {
     namespace lua_tool {

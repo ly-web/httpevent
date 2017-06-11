@@ -4,7 +4,7 @@
 
 #include "request.hpp"
 #include "response.hpp"
-#include "kaguya/kaguya.hpp"
+#include "kaguya.hpp"
 
 namespace httpevent {
 
