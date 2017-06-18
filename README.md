@@ -1,6 +1,8 @@
 # httpevent
 c++ and lua web framework
 
+此项目以升级为[hi-nginx](https://github.com/webcpp/hi-nginx).. 欢迎更新！！！
+
 ## 缘起
 httpevent是webcppd的继承者。
 
