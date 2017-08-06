@@ -79,11 +79,11 @@ static void init_config_map(Poco::Util::LayeredConfiguration* config) {
 }
 
 static void init_callback_config(Poco::Util::LayeredConfiguration* config) {
-    SERVER_TYPE = config->getInt("http.serverType", 3);
+    SERVER_TYPE = config->getInt("http.serverType", 1);
     MIME_SRC_FILE = config->getString("http.mime", "/etc/httpevent/mime.conf");
-    ENABLE_SSL = config->getBool("http.enableSSL", true);
+    ENABLE_SSL = config->getBool("http.enableSSL", false);
     HOST = config->getString("http.ip", "127.0.0.1");
-    PORT = config->getInt("http.port", ENABLE_SSL ? 443 : 80);
+    PORT = config->getInt("http.port", ENABLE_SSL ? 8081 : 8080);
     TIMEOUT = config->getInt("http.timeout", 60);
     DEFAULT_CONTENT_TYPE = config->getString("http.defaultContentType", "text/html;charset=UTF-8");
     SERVER_NAME = config->getString("http.serverName", "httpevent");
@@ -97,9 +97,9 @@ static void init_callback_config(Poco::Util::LayeredConfiguration* config) {
     CACHE_CLIENT_EXPIRES = config->getInt64("http.cacheExpires", 600);
     CACHE_EXPIRES = CACHE_CLIENT_EXPIRES * 1000;
     HTTP_PROXY_USED = config->getBool("http.proxyUsed", false);
-    ENABLE_HOTLINKING = config->getBool("http.enableHotlinking", true);
-    IP_ENABLE_CHECK = config->getBool("http.ipEnableCheck", true);
-    ENABLE_LOGGER = config->getBool("http.enableLogger", true);
+    ENABLE_HOTLINKING = config->getBool("http.enableHotlinking", false);
+    IP_ENABLE_CHECK = config->getBool("http.ipEnableCheck", false);
+    ENABLE_LOGGER = config->getBool("http.enableLogger", false);
     IP_DENY_EXPIRE = config->getInt("http.ipDenyExpire", 3600)*1000;
     IP_ACCESS_INTERVAl = config->getInt("http.ipAccessInterval", 30)*1000;
     IP_DENY_FILE = config->getString("http.ipDenyFile", "/etc/httpevent/ipdeny.conf");
