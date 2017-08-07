@@ -29,7 +29,7 @@
 #include <event2/bufferevent_ssl.h>
 #include <event2/util.h>
 #include <event2/keyvalq_struct.h>
-#include <event2//thread.h>
+#include <event2/thread.h>
 
 #endif /* LIBEVENT2_HPP */
 
