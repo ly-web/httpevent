@@ -145,8 +145,3 @@ httpevent提供系统级的缓存服务，对于3、4、5型服务器，只要�
 - C/C++可能比lua更适合需要密集计算的业务
 - 尽量使用通用性较强的路由规则，缩短路由表的长度
 - 绝不要require包含lua api的模块，用dofile替代
-
-## 捐赠
-若httpevent对你有所帮助，欢迎你对该项目提供一些捐赠
-
-![捐赠二维码](https://github.com/webcpp/httpevent/blob/master/www/assets/donate.png)
